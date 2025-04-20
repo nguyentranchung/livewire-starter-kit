@@ -44,7 +44,9 @@ new class extends Component {
                 </flux:subheading>
             </div>
 
-            <flux:input wire:model="password" :label="__('Password')" type="password" />
+            <input hidden type="email" name="email" value="{{ Auth::user()->email }}" autocomplete="email" />
+
+            <flux:input wire:model="password" :label="__('Password')" type="password" autocomplete="new-password" />
 
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
                 <flux:modal.close>
