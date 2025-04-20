@@ -30,6 +30,8 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
+        $this->email = Str::lower($this->email);
+
         // Get the user model from auth config in a single line
         $userAttemptingLogin = app(config('auth.providers.users.model'))::where('email', $this->email)->first();
 
