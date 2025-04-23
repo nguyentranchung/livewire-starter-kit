@@ -9,13 +9,15 @@ class VerifyTwoFactorCode
     /**
      * Verify a two-factor authentication code.
      *
-     * @param  string  $secret The decrypted secret key
-     * @param  string  $code The code to verify
-     * @return bool
+     * @param  string  $secret  The decrypted secret key
+     * @param  string  $code  The code to verify
      */
-    public function __invoke(string $secret, string $code): bool
-    {
-        $google2fa = new Google2FA();
+    public function __invoke(
+        #[\SensitiveParameter] string $secret,
+        #[\SensitiveParameter] string $code
+    ): bool {
+        $google2fa = new Google2FA;
+
         return $google2fa->verifyKey($secret, $code);
     }
 }

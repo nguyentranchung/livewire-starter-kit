@@ -1,7 +1,9 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
@@ -33,9 +35,9 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $this->email = Str::lower($this->email);
 
         // Get the user model from auth config in a single line
-        $userAttemptingLogin = app(config('auth.providers.users.model'))::where('email', $this->email)->first();
+        $userAttemptingLogin = User::where('email', $this->email)->first();
 
-        if (! $userAttemptingLogin || ! \Illuminate\Support\Facades\Hash::check($this->password, $userAttemptingLogin->password)) {
+        if (! $userAttemptingLogin || ! Hash::check($this->password, $userAttemptingLogin->password)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -44,9 +46,10 @@ new #[Layout('components.layouts.auth')] class extends Component {
         }
 
         if($this->userHasTwoFactorEnabled($userAttemptingLogin)){
-            // Store login.id in session and redirect to 2FA challenge, do NOT authenticate yet
+            // Store login.id and remember in session and redirect to 2FA challenge, do NOT authenticate yet
             session()->put([
-                'login.id' => $userAttemptingLogin->getKey()
+                'login.id' => $userAttemptingLogin->getKey(),
+                'login.remember' => $this->remember
             ]);
             RateLimiter::clear($this->throttleKey());
             $this->redirectTwoFactor($userAttemptingLogin);
