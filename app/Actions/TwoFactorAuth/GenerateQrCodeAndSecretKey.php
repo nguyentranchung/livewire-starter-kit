@@ -2,11 +2,11 @@
 
 namespace App\Actions\TwoFactorAuth;
 
+use App\Models\User;
 use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
-use App\Models\User;
 use PragmaRX\Google2FA\Google2FA;
 
 class GenerateQrCodeAndSecretKey
@@ -38,7 +38,7 @@ class GenerateQrCodeAndSecretKey
         $writer = new Writer(
             new ImageRenderer(
                 new RendererStyle(800),
-                new SvgImageBackEnd()
+                new SvgImageBackEnd
             )
         );
 

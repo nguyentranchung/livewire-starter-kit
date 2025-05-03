@@ -55,5 +55,4 @@ class RegistrationTest extends TestCase
             'email' => Str::lower($uppercaseEmail),
         ]);
     }
-
 }

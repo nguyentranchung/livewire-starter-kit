@@ -11,9 +11,7 @@ trait HasProfilePhoto
     /**
      * Update the user's profile photo.
      *
-     * @param \Illuminate\Http\UploadedFile $photo
-     * @param string $storagePath
-     * @return void
+     * @param  string  $storagePath
      */
     public function updateProfilePhoto(UploadedFile $photo, $storagePath = 'profile-photos'): void
     {
@@ -29,11 +27,9 @@ trait HasProfilePhoto
             }
         });
     }
-    
+
     /**
      * Delete the user's profile photo.
-     *
-     * @return void
      */
     public function deleteProfilePhoto(): void
     {
@@ -50,8 +46,6 @@ trait HasProfilePhoto
 
     /**
      * Get the URL to the user's profile photo.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function avatar(): Attribute
     {
@@ -69,8 +63,6 @@ trait HasProfilePhoto
 
     /**
      * Get the disk that profile photos should be stored on.
-     *
-     * @return string
      */
     protected function profilePhotoDisk(): string
     {
