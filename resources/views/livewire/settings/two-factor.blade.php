@@ -28,7 +28,7 @@ new class extends Component
     public $showRecoveryCodes = true;
     
     public function mount(){
-        if(is_null(auth()->user()->two_factor_confirmed_at)) {
+        if (is_null(auth()->user()->two_factor_confirmed_at)) {
             app(DisableTwoFactorAuthentication::class)(auth()->user());
         } else {
             $this->confirmed = true;
@@ -71,7 +71,7 @@ new class extends Component
 
         $valid = app(VerifyTwoFactorCode::class)($this->secret, $code);
 
-        if($valid){
+        if ($valid){
             app(ConfirmTwoFactorAuthentication::class)(auth()->user());
             $this->confirmed = true;
         } else {
@@ -101,7 +101,7 @@ new class extends Component
     <x-settings.layout :heading="__('Two Factor Authentication')" :subheading="__('Manage your two-factor authentication settings')">
 
         <div x-data="{ showRecoveryCodes: '{{ $showRecoveryCodes }}' }" class="flex flex-col w-full mx-auto text-sm">
-            @if(!$confirmed)
+            @if(! $confirmed)
                 <div class="relative flex flex-col items-start rounded-xl justify-start space-y-5">
                     <flux:badge color="orange">Disabled</flux:badge>
                     <p class="-translate-y-1 text-stone-500 dark:text-stone-400">When you enable 2FA, you’ll be prompted for a secure code during login, which can be retrieved from your phone's Google Authenticator app.</p>
@@ -124,13 +124,21 @@ new class extends Component
                         </div>
                         <div class="space-y-2 flex flex-col items-center justify-center">
                             <h2 class="text-xl font-medium text-stone-900 dark:text-stone-100">
-                                @if(!$verify){{ __('Turn on 2-step Verification') }}@else{{ __('Verify Authentication Code') }}@endif
+                                @if(! $verify)
+                                    {{ __('Turn on 2-step Verification') }}
+                                @else
+                                    {{ __('Verify Authentication Code') }}
+                                @endif
                             </h2>
                             <p class="text-stone-600 dark:text-stone-400">
-                                @if(!$verify){{ __('Open your authenticator app and choose Scan QR code') }}@else{{ __('Enter the 6-digit code from your authenticator app') }}@endif
+                                @if(! $verify)
+                                    {{ __('Open your authenticator app and choose Scan QR code') }}
+                                @else
+                                    {{ __('Enter the 6-digit code from your authenticator app') }}
+                                @endif
                             </p>
                         </div>
-                        @if(!$verify)
+                        @if(! $verify)
                             <div class="relative max-w-md mx-auto overflow-hidden flex items-center p-8 pt-0">
                                 <div class="border border-stone-200 dark:border-stone-700 rounded-lg relative overflow-hidden w-64 aspect-square mx-auto">
                                     <div wire:loading.flex wire:target="enable" class="bg-white dark:bg-stone-700 animate-pulse flex items-center justify-center absolute inset-0 w-full h-auto aspect-square z-10">

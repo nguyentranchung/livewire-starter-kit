@@ -17,25 +17,22 @@
             if (evt.key === 'Backspace') {
                 evt.preventDefault();
                 evt.stopPropagation();
-                if (index > 1) {
-                    if (this.$refs['input' + index].value !== '') {
-                        this.$refs['input' + index].value = '';
-                    } else {
-                        if (index > 1) {
-                            this.$refs['input' + (index - 1)].value = '';
-                            this.$refs['input' + (index - 1)].focus();
-                        }
-                    }
-                } else {
+                
+                // Clear current input if it has a value
+                if (this.$refs['input' + index].value !== '') {
                     this.$refs['input' + index].value = '';
+                } 
+                // Otherwise, move to previous input if possible and clear it
+                else if (index > 1) {
+                    this.$refs['input' + (index - 1)].value = '';
+                    this.$refs['input' + (index - 1)].focus();
                 }
             }
         }
-        let that = this;
-        setTimeout(function() {
-            that.$refs.pin.value = that.generateCode();
-            if (index === digits && [...Array(digits).keys()].every(i => that.$refs['input' + (i + 1)].value !== '')) {
-                that.submitCallback();
+        setTimeout(() => {
+            this.$refs.pin.value = this.generateCode();
+            if (index === digits && [...Array(digits).keys()].every(i => this.$refs['input' + (i + 1)].value !== '')) {
+                this.submitCallback();
             }
         }, 100);
     },
@@ -51,15 +48,15 @@
             if (i < this.total_digits) {
                 this.$refs['input' + (i + 1)].value = paste[i];
             }
+
             let focusLastInput = (paste.length <= this.total_digits) ? paste.length : this.total_digits;
             this.$refs['input' + focusLastInput].focus();
-            if (paste.length >= this.total_digits) {
-                let that = this;
-                setTimeout(function() {
-                    that.$refs.pin.value = that.generateCode();
-                    that.submitCallback();
-                }, 100);
 
+            if (paste.length >= this.total_digits) {
+                setTimeout(() => {
+                    this.$refs.pin.value = this.generateCode();
+                    this.submitCallback();
+                }, 100);
             }
         }
     },
@@ -70,7 +67,7 @@
         }
         return code;
     },
-}" x-init="setTimeout(function() {
+}" x-init="setTimeout(() => {
     $refs.input1.focus();
 }, 100);" @focus-auth-2fa-auth-code.window="$refs.input1.focus()"
     class="relative input-otp">
