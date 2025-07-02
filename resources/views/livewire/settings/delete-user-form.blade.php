@@ -15,7 +15,7 @@ new class extends Component {
     public function deleteUser(Logout $logout): void
     {
         $this->validate([
-            'password' => ['required', 'string', 'current_password'],
+            'password' => ['required', 'string'],
         ]);
 
         $key = 'delete-user:' . Auth::id();
@@ -28,6 +28,10 @@ new class extends Component {
         }
 
         RateLimiter::hit($key, 60);
+
+        $this->validate([
+            'password' => ['current_password'],
+        ]);
 
         tap(Auth::user(), $logout(...))->delete();
 
