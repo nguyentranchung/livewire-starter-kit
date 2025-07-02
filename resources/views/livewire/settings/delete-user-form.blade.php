@@ -2,6 +2,8 @@
 
 use App\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\ValidationException;
 use Livewire\Volt\Component;
 
 new class extends Component {
@@ -15,6 +17,17 @@ new class extends Component {
         $this->validate([
             'password' => ['required', 'string', 'current_password'],
         ]);
+
+        $key = 'delete-user:' . Auth::id();
+
+        if (RateLimiter::tooManyAttempts($key, 1)) {
+            $seconds = RateLimiter::availableIn($key);
+            throw ValidationException::withMessages([
+                'password' => "Slow down! Please wait another {$seconds} seconds.",
+            ]);
+        }
+
+        RateLimiter::hit($key, 60);
 
         tap(Auth::user(), $logout(...))->delete();
 
@@ -44,9 +57,9 @@ new class extends Component {
                 </flux:subheading>
             </div>
 
-            <input hidden type="email" name="email" value="{{ Auth::user()->email }}" autocomplete="email" />
+            <input hidden type="email" name="email" value="{{ Auth::user()->email }}" autocomplete="email"/>
 
-            <flux:input wire:model="password" :label="__('Password')" type="password" autocomplete="new-password" />
+            <flux:input wire:model="password" :label="__('Password')" type="password" autocomplete="new-password"/>
 
             <div class="flex justify-end space-x-2 rtl:space-x-reverse">
                 <flux:modal.close>
