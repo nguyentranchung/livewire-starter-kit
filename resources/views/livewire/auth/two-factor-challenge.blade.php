@@ -103,7 +103,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function ensureIsNotRateLimited(User $user): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey($user), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey($user), 5)) {
             return;
         }
 
